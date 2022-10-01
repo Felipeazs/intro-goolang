@@ -5,17 +5,18 @@ import "fmt"
 func main(){
     conferenceName := "Go conference"
     const conferenceTickets = 50
-    var remainingTickets = 50
+    var remainingTickets uint = 50
     
     fmt.Printf("Welcome to our %v booking application\n", conferenceName)
     fmt.Printf("We have a total of %v tickets and %v are still available\n", conferenceTickets, remainingTickets)
     fmt.Println("Get your tickets here to attend")
 
+    var bookings [50]string 
 
     var firstName string
     var lastName string
     var email string
-    var userTickets int
+    var userTickets uint
 
     fmt.Printf("firstName is %T\n", firstName)
     fmt.Printf("userTickets is %T\n", userTickets)
@@ -32,10 +33,18 @@ func main(){
     fmt.Println("Enter number of tickets: ")
     fmt.Scan(&userTickets)
 
-    fmt.Printf("Thank you %v %v for booking %v tickets. You will receive a confirmation email at %v\n", firstName, lastName, userTickets, email)
-    
+    bookings[0] = firstName + " " + lastName 
+    fmt.Printf("The whole array: %v\n", bookings)
+    fmt.Printf("The first value: %v\n", bookings[0])
+    fmt.Printf("Array type: %T\n", bookings)
+    fmt.Printf("Array length: %v\n", len(bookings))
+
     remainingTickets = remainingTickets - userTickets
+    
+    fmt.Printf("Thank you %v %v for booking %v tickets. You will receive a confirmation email at %v\n", firstName, lastName, userTickets, email)
     fmt.Printf("%v tickets remaining", remainingTickets)
+
+
 
 }
 
