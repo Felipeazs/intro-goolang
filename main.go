@@ -19,8 +19,8 @@ func main(){
     userName = "Felipe"
     userTickets = 2
 
-    fmt.Printf("userName is %T, userTickets are %T", userName, userTickets)
-    fmt.Printfn("User %v booked %v tickets.", userName, userTickets)
+    fmt.Printf("userName is %T, userTickets are %T\n", userName, userTickets)
+    fmt.Printf("User %v booked %v tickets.\n", userName, userTickets)
 
 }
 
