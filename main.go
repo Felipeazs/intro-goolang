@@ -5,7 +5,7 @@ import "fmt"
 func main(){
     conferenceName := "Go conference"
     const conferenceTickets = 50
-    remainingTickets := 50
+    var remainingTickets = 50
     
     fmt.Printf("Welcome to our %v booking application\n", conferenceName)
     fmt.Printf("We have a total of %v tickets and %v are still available\n", conferenceTickets, remainingTickets)
@@ -18,6 +18,7 @@ func main(){
     var userTickets int
 
     fmt.Printf("firstName is %T\n", firstName)
+    fmt.Printf("userTickets is %T\n", userTickets)
     
     fmt.Println("Enter your first name: ")
     fmt.Scan(&firstName) //print the value in memory -- & is a pointer
@@ -30,10 +31,11 @@ func main(){
     
     fmt.Println("Enter number of tickets: ")
     fmt.Scan(&userTickets)
-    //ask user
-
 
     fmt.Printf("Thank you %v %v for booking %v tickets. You will receive a confirmation email at %v\n", firstName, lastName, userTickets, email)
+    
+    remainingTickets = remainingTickets - userTickets
+    fmt.Printf("%v tickets remaining", remainingTickets)
 
 }
 
