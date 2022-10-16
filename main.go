@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"intro/helper" //custom package
+	"time"
 )
 
 // package level variables, available for main ann all functions
@@ -39,6 +40,7 @@ func main() {
 
 		if isValidName && isValidEmail && isValidTicketNumber {
 			bookTicket(userTickets, firstName, lastName, email)
+			go sendTicket(userTickets, firstName, lastName, email) // go makes the concurrency(multiple thread) so the code is not blocked by the sleep function
 
 			//call print firstNames
 			firstNames := getFirstNames()
@@ -56,7 +58,7 @@ func main() {
 			}
 
 			if !isValidEmail {
-				fmt.Printf("emil address you enteres doesn't contain a @ symbol\n")
+				fmt.Printf("email address you enteres doesn't contain a @ symbol\n")
 			}
 
 			if !isValidTicketNumber {
@@ -136,6 +138,17 @@ func bookTicket(userTickets uint, firstName string, lastName string, email strin
 
 	fmt.Printf("Thank you %v %v for booking %v tickets. You will receive a confirmation email at %v\n",
 		firstName, lastName, userTickets, email)
-	fmt.Printf("%v tickets remaining for %v", remainingTickets, conferenceName)
+	fmt.Printf("%v tickets remaining for %v\n", remainingTickets, conferenceName)
 
+}
+
+func sendTicket(userTickets uint, firstName string, lastName string, email string) {
+	// stops execution for the thread in 10 seconds: blocking function
+	time.Sleep(10 * time.Second)
+
+	// Sprintf lets you save the string in a variable
+	var ticket = fmt.Sprintf("%v Sending tickets for %v %v", userTickets, firstName, lastName)
+	fmt.Println("##################")
+	fmt.Printf("sending ticket:\n %v \nto email address %v\n", ticket, email)
+	fmt.Println("##################")
 }
