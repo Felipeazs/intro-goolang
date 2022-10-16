@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"intro/helper"
-	"strings"
+	"intro/helper" //custom package
+	"strconv"
 )
 
 // package level variables, available for main ann all functions
@@ -12,7 +12,10 @@ const conferenceTickets = 50
 
 var conferenceName = "Go conference" //type inference :=
 var remainingTickets uint = 50
-var bookings = []string{} //list of strings
+var bookings = make([]map[string]string, 0) // empty list of maps(objects), initialize with 0 elements
+
+// global package variable
+// var MyVariable = "somevalue"
 
 func main() {
 
@@ -23,13 +26,13 @@ func main() {
 		firstName, lastName, email, userTickets := getUserInput()
 
 		//input validation
-		isValidName, isValidEmail, isValidTicketNumber := helper.ValidateUserInput(firstName, lastName, email, userTickets)
+		isValidName, isValidEmail, isValidTicketNumber := helper.ValidateUserInput(firstName, lastName, email, userTickets, remainingTickets)
 
 		if isValidName && isValidEmail && isValidTicketNumber {
 			bookTicket(userTickets, firstName, lastName, email)
 
 			//call print firstNames
-			firstNames := getFirstNames(bookings)
+			firstNames := getFirstNames()
 			fmt.Printf("These are all our bookings: %v\n", firstNames)
 
 			//conditionals
@@ -65,15 +68,13 @@ func greetUsers() {
 	fmt.Println("Get your tickets here to attend")
 }
 
-func getFirstNames(bookings []string) []string {
+func getFirstNames() []string {
 	firstNames := []string{}
 	//list iteration for each
 	//blank identifier (_) replaces a variable for nothing; in this case repalaces the index because it is not used
 	//bookings is a global variable: no need to pass it as function arguments
 	for _, booking := range bookings {
-		var names = strings.Fields(booking) // splits the string with empty spaces as separator "Felipe Zapata" => ["Felipe", "Zapata"]
-		var firstName = names[0]
-		firstNames = append(firstNames, firstName)
+		firstNames = append(firstNames, booking["firstName"])
 	}
 	return firstNames
 }
@@ -106,7 +107,17 @@ func getUserInput() (string, string, string, uint) {
 func bookTicket(userTickets uint, firstName string, lastName string, email string) {
 	//remainingTickets, bookings and conferenceName are global variables: no need to pass them as function arguments
 	remainingTickets = remainingTickets - userTickets
-	bookings = append(bookings, firstName+" "+lastName)
+
+	//create Map for Users == Objects in javascript key value pairs
+	//cant mix value types (string and int)
+	var userData = make(map[string]string)
+	userData["firstName"] = firstName
+	userData["lastName"] = lastName
+	userData["email"] = email
+	userData["tickets"] = strconv.FormatUint(uint64(userTickets), 10) //conversion int to string
+
+	bookings = append(bookings, userData)
+    fmt.Printf("list of bookings is %v\n", bookings)
 
 	fmt.Printf("Thank you %v %v for booking %v tickets. You will receive a confirmation email at %v\n",
 		firstName, lastName, userTickets, email)
