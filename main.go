@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"intro/helper" //custom package
-	"strconv"
 )
 
 // package level variables, available for main ann all functions
@@ -12,7 +11,17 @@ const conferenceTickets = 50
 
 var conferenceName = "Go conference" //type inference :=
 var remainingTickets uint = 50
-var bookings = make([]map[string]string, 0) // empty list of maps(objects), initialize with 0 elements
+
+// var bookings = make([]map[string]string, 0) // empty list of maps(objects), initialize with 0 elements
+var bookings = make([]UserData, 0) // making a empty struct of UserData to replace the empty list of maps
+
+// Structs: mix data types (classes)
+type UserData struct {
+	firstName       string
+	lastName        string
+	email           string
+	numberOfTickets uint
+}
 
 // global package variable
 // var MyVariable = "somevalue"
@@ -74,7 +83,7 @@ func getFirstNames() []string {
 	//blank identifier (_) replaces a variable for nothing; in this case repalaces the index because it is not used
 	//bookings is a global variable: no need to pass it as function arguments
 	for _, booking := range bookings {
-		firstNames = append(firstNames, booking["firstName"])
+		firstNames = append(firstNames, booking.firstName)
 	}
 	return firstNames
 }
@@ -108,16 +117,22 @@ func bookTicket(userTickets uint, firstName string, lastName string, email strin
 	//remainingTickets, bookings and conferenceName are global variables: no need to pass them as function arguments
 	remainingTickets = remainingTickets - userTickets
 
+	var userData = UserData{
+		firstName:       firstName,
+		lastName:        lastName,
+		email:           email,
+		numberOfTickets: userTickets,
+	}
+
 	//create Map for Users == Objects in javascript key value pairs
 	//cant mix value types (string and int)
-	var userData = make(map[string]string)
-	userData["firstName"] = firstName
-	userData["lastName"] = lastName
-	userData["email"] = email
-	userData["tickets"] = strconv.FormatUint(uint64(userTickets), 10) //conversion int to string
+	// userData["firstName"] = firstName
+	// userData["lastName"] = lastName
+	// userData["email"] = email
+	// userData["tickets"] = strconv.FormatUint(uint64(userTickets), 10) //conversion int to string
 
 	bookings = append(bookings, userData)
-    fmt.Printf("list of bookings is %v\n", bookings)
+	fmt.Printf("list of bookings is %v\n", bookings)
 
 	fmt.Printf("Thank you %v %v for booking %v tickets. You will receive a confirmation email at %v\n",
 		firstName, lastName, userTickets, email)
