@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"intro/helper" //custom package
 	"time"
+    "sync"
 )
 
 // package level variables, available for main ann all functions
@@ -27,48 +28,52 @@ type UserData struct {
 // global package variable
 // var MyVariable = "somevalue"
 
+//WaitGroup: waits for the launched go routine to finish
+var wg = sync.WaitGroup{}
+
 func main() {
 
 	greetUsers()
 
 	//for loop
-	for { // the same as for true
-		firstName, lastName, email, userTickets := getUserInput()
+	firstName, lastName, email, userTickets := getUserInput()
 
-		//input validation
-		isValidName, isValidEmail, isValidTicketNumber := helper.ValidateUserInput(firstName, lastName, email, userTickets, remainingTickets)
+	//input validation
+	isValidName, isValidEmail, isValidTicketNumber := helper.ValidateUserInput(firstName, lastName, email, userTickets, remainingTickets)
 
-		if isValidName && isValidEmail && isValidTicketNumber {
-			bookTicket(userTickets, firstName, lastName, email)
-			go sendTicket(userTickets, firstName, lastName, email) // go makes the concurrency(multiple thread) so the code is not blocked by the sleep function
+	if isValidName && isValidEmail && isValidTicketNumber {
+		bookTicket(userTickets, firstName, lastName, email)
 
-			//call print firstNames
-			firstNames := getFirstNames()
-			fmt.Printf("These are all our bookings: %v\n", firstNames)
+        wg.Add(1)//number of threads to be executes (go)
+		go sendTicket(userTickets, firstName, lastName, email) // go makes the concurrency(multiple thread) so the code is not blocked by the sleep function
 
-			//conditionals
-			noTicketsRemaining := remainingTickets == 0 //boolan variable by inference, if remainingTickets is cero then noThicketRemainig is true
-			if noTicketsRemaining {                     //expression to evaluate
-				fmt.Print("Our conference id booked out. Come back next year")
-				break //ends the loop
-			}
-		} else {
-			if !isValidName {
-				fmt.Printf("first name or lastname you entered is too short\n")
-			}
+		//call print firstNames
+		firstNames := getFirstNames()
+		fmt.Printf("These are all our bookings: %v\n", firstNames)
 
-			if !isValidEmail {
-				fmt.Printf("email address you enteres doesn't contain a @ symbol\n")
-			}
-
-			if !isValidTicketNumber {
-				fmt.Printf("number of tickets you enteres is invalid\n")
-			}
-
-			fmt.Printf("your input data is invalid, try again\n")
+		//conditionals
+		noTicketsRemaining := remainingTickets == 0 //boolan variable by inference, if remainingTickets is cero then noThicketRemainig is true
+		if noTicketsRemaining {                     //expression to evaluate
+			fmt.Print("Our conference id booked out. Come back next year")
+			//break //ends the loop
 		}
-	}
+	} else {
+		if !isValidName {
+			fmt.Printf("first name or lastname you entered is too short\n")
+		}
 
+		if !isValidEmail {
+			fmt.Printf("email address you enteres doesn't contain a @ symbol\n")
+		}
+
+		if !isValidTicketNumber {
+			fmt.Printf("number of tickets you enteres is invalid\n")
+		}
+
+		fmt.Printf("your input data is invalid, try again\n")
+	}
+    
+    wg.Wait() // waits until the sendTicket function is done
 }
 
 // functions
@@ -151,4 +156,6 @@ func sendTicket(userTickets uint, firstName string, lastName string, email strin
 	fmt.Println("##################")
 	fmt.Printf("sending ticket:\n %v \nto email address %v\n", ticket, email)
 	fmt.Println("##################")
+
+    wg.Done() // removes the thread when its completed
 }
