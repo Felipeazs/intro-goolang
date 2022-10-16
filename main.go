@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"intro/helper"
 	"strings"
 )
 
@@ -22,7 +23,7 @@ func main() {
 		firstName, lastName, email, userTickets := getUserInput()
 
 		//input validation
-		isValidName, isValidEmail, isValidTicketNumber := validateUserInput(firstName, lastName, email, userTickets)
+		isValidName, isValidEmail, isValidTicketNumber := helper.ValidateUserInput(firstName, lastName, email, userTickets)
 
 		if isValidName && isValidEmail && isValidTicketNumber {
 			bookTicket(userTickets, firstName, lastName, email)
